@@ -34,20 +34,17 @@
             padding: 5px;
         }
 
-        /* Layout below filter by genre and filter by year */
         .movie-layout {
             display: flex;
             justify-content: space-between;
             margin-top: 20px;
         }
 
-        /* Add Movie Form (Left Section) */
         .add-movie-section {
             width: 30%;
             text-align: left;
         }
 
-        /* Movie Details Table (Right Section) */
         .movie-details-section {
             width: 65%;
             text-align: left;
@@ -93,10 +90,10 @@
         table {
            margin: 20px auto;
     width: 100%;
-    border: 2px solid #333;  /* Thicker border */
-    border-radius: 12px;      /* Rounded corners */
-    overflow: hidden;         /* Prevents content overflow from rounding */
-    border-collapse: collapse; /* Ensures the rounded corners work */
+    border: 2px solid #333; 
+    border-radius: 12px;      
+    overflow: hidden;       
+    border-collapse: collapse;
         }
 
         table th, table td {
@@ -117,10 +114,8 @@
 </head>
 <body ng-controller="MovieController">
 
-    <!-- Heading for the Page -->
     <h1>Movie Rental Store</h1>
 
-    <!-- Filters in the same line -->
     <div class="filters">
         <label for="genre">Filter by Genre:</label>
         <select id="genre" ng-model="selectedGenre" ng-options="genre for genre in genres">
@@ -133,9 +128,8 @@
         </select>
     </div>
 
-    <!-- Layout for Add Movie Form and Movie Details Table -->
     <div class="movie-layout">
-        <!-- Left Section: Add Movie Form -->
+       
         <div class="add-movie-section">
             <h3>Add a New Movie</h3>
             <form ng-submit="addMovie()">
@@ -147,7 +141,6 @@
             </form>
         </div>
 
-        <!-- Right Section: Movie Details Table -->
         <div class="movie-details-section">
             <h3>Movie Details</h3>
             <table>
