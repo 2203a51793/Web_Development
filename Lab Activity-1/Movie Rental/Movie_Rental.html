@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="movieRentalApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Rental Store</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <script src="app.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            margin: 20px;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .filters label {
+            margin-right: 10px;
+        }
+
+        .filters select {
+            margin-right: 20px;
+            padding: 5px;
+        }
+
+        /* Layout below filter by genre and filter by year */
+        .movie-layout {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Add Movie Form (Left Section) */
+        .add-movie-section {
+            width: 30%;
+            text-align: left;
+        }
+
+        /* Movie Details Table (Right Section) */
+        .movie-details-section {
+            width: 65%;
+            text-align: left;
+			
+        }
+
+        form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+
+        form input {
+            margin: 10px 0;
+            padding: 8px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            padding: 8px 20px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        h1, h3 {
+            color: #333;
+        }
+
+        table {
+           margin: 20px auto;
+    width: 100%;
+    border: 2px solid #333;  /* Thicker border */
+    border-radius: 12px;      /* Rounded corners */
+    overflow: hidden;         /* Prevents content overflow from rounding */
+    border-collapse: collapse; /* Ensures the rounded corners work */
+        }
+
+        table th, table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #007BFF;
+            color: #fff;
+        }
+
+        p {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body ng-controller="MovieController">
+
+    <!-- Heading for the Page -->
+    <h1>Movie Rental Store</h1>
+
+    <!-- Filters in the same line -->
+    <div class="filters">
+        <label for="genre">Filter by Genre:</label>
+        <select id="genre" ng-model="selectedGenre" ng-options="genre for genre in genres">
+            <option value="">All</option>
+        </select>
+
+        <label for="year">Filter by Year:</label>
+        <select id="year" ng-model="selectedYear" ng-options="option for option in yearOptions">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <!-- Layout for Add Movie Form and Movie Details Table -->
+    <div class="movie-layout">
+        <!-- Left Section: Add Movie Form -->
+        <div class="add-movie-section">
+            <h3>Add a New Movie</h3>
+            <form ng-submit="addMovie()">
+                <input type="text" ng-model="newMovie.title" placeholder="Title" required>
+                <input type="text" ng-model="newMovie.genre" placeholder="Genre" required>
+                <input type="number" ng-model="newMovie.year" placeholder="Year" required>
+                <button type="submit">Add Movie</button>
+                <p style="color:red;" ng-if="errorMessage">{{ errorMessage }}</p>
+            </form>
+        </div>
+
+        <!-- Right Section: Movie Details Table -->
+        <div class="movie-details-section">
+            <h3>Movie Details</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Genre</th>
+                        <th>Year</th>
+                        <th>Rental Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="movie in filterMovies()">
+                        <td>{{ movie.title }}</td>
+                        <td>{{ movie.genre }}</td>
+                        <td>{{ movie.year }}</td>
+                        <td>{{ getRentalPrice(movie) | currency }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

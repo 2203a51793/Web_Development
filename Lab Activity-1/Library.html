@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="libraryApp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #f3f4f6, #e5e7eb);
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        td:hover {
+            background-color: #f1f1f1;
+            transform: scale(1.1);
+        }
+
+        form {
+            width: 60%;
+            margin: 20px auto;
+            text-align: center;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        input, button {
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+        input:focus, button:hover {
+            box-shadow: 0 0 8px #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        p {
+            color: red;
+            font-weight: bold;
+        }
+
+        tr.ng-enter {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body ng-controller="LibraryController">
+
+    <h1>Library Management</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Book Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="item in library" class="ng-enter">
+                <td>{{ item.category }}</td>
+                <td><input type="number" ng-model="item.count" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <form ng-submit="addCategory()">
+        <input type="text" ng-model="newCategory.name" placeholder="Category Name" required />
+        <input type="number" ng-model="newCategory.count" placeholder="Initial Book Count" required />
+        <button type="submit">Add Category</button>
+        <p ng-if="errorMessage">{{ errorMessage }}</p>
+    </form>
+
+    <script>
+        angular.module('libraryApp', [])
+        .controller('LibraryController', ['$scope', function($scope) {
+            $scope.library = [
+                { category: 'Fiction', count: 120 },
+                { category: 'Non-Fiction', count: 80 },
+                { category: 'Science', count: 150 },
+                { category: 'Mathematics', count: 70 }
+            ];
+            $scope.newCategory = { name: '', count: null };
+            $scope.errorMessage = '';
+
+            $scope.addCategory = function() {
+                const existingCategory = $scope.library.find(item => item.category.toLowerCase() === $scope.newCategory.name.toLowerCase());
+                if (existingCategory) {
+                    $scope.errorMessage = 'Category name must be unique!';
+                } else {
+                    $scope.library.push({ category: $scope.newCategory.name, count: $scope.newCategory.count });
+                    $scope.newCategory = { name: '', count: null };
+                    $scope.errorMessage = '';
+                }
+            };
+        }]);
+    </script>
+</body>
+</html>
