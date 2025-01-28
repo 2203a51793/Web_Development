@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html ng-app="financeTracker">
+<head>
+    <title>Simple Finance Tracker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        input {
+            padding: 8px;
+            width: 200px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .transaction {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+        }
+        .balance-positive {
+            color: green;
+        }
+        .balance-negative {
+            color: red;
+        }
+        .summary {
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" ng-controller="FinanceController">
+        <h1>Simple Finance Tracker</h1>
+
+        <!-- Income Section -->
+        <div class="form-group">
+            <h3>Add Income</h3>
+            <input type="text" ng-model="newIncome.description" placeholder="Description">
+            <input type="number" ng-model="newIncome.amount" placeholder="Amount">
+            <button ng-click="addIncome()">Add Income</button>
+        </div>
+
+        <!-- Expense Section -->
+        <div class="form-group">
+            <h3>Add Expense</h3>
+            <input type="text" ng-model="newExpense.description" placeholder="Description">
+            <input type="number" ng-model="newExpense.amount" placeholder="Amount">
+            <button ng-click="addExpense()">Add Expense</button>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary">
+            <h3>Financial Summary</h3>
+            <p>Total Income: ${{totalIncome() | number:2}}</p>
+            <p>Total Expenses: ${{totalExpenses() | number:2}}</p>
+            <p>Balance: <span ng-class="{'balance-positive': getBalance() >= 0, 'balance-negative': getBalance() < 0}">
+                ${{getBalance() | number:2}}
+            </span></p>
+        </div>
+
+        <!-- Transactions List -->
+        <div>
+            <h3>Income Transactions</h3>
+            <div class="transaction" ng-repeat="income in incomes">
+                <p>{{income.description}} - ${{income.amount | number:2}}
+                    <button ng-click="deleteIncome($index)" style="float: right; background-color: #f44336;">Delete</button>
+                </p>
+            </div>
+
+            <h3>Expense Transactions</h3>
+            <div class="transaction" ng-repeat="expense in expenses">
+                <p>{{expense.description}} - ${{expense.amount | number:2}}
+                    <button ng-click="deleteExpense($index)" style="float: right; background-color: #f44336;">Delete</button>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        angular.module('financeTracker', [])
+        .controller('FinanceController', function($scope) {
+            // Initialize arrays to store transactions
+            $scope.incomes = [];
+            $scope.expenses = [];
+            
+            // Initialize new transaction objects
+            $scope.newIncome = {
+                description: '',
+                amount: ''
+            };
+            
+            $scope.newExpense = {
+                description: '',
+                amount: ''
+            };
+            
+            // Add income function
+            $scope.addIncome = function() {
+                if ($scope.newIncome.description && $scope.newIncome.amount > 0) {
+                    $scope.incomes.push({
+                        description: $scope.newIncome.description,
+                        amount: parseFloat($scope.newIncome.amount)
+                    });
+                    // Reset form
+                    $scope.newIncome = {
+                        description: '',
+                        amount: ''
+                    };
+                }
+            };
+            
+            // Add expense function
+            $scope.addExpense = function() {
+                if ($scope.newExpense.description && $scope.newExpense.amount > 0) {
+                    $scope.expenses.push({
+                        description: $scope.newExpense.description,
+                        amount: parseFloat($scope.newExpense.amount)
+                    });
+                    // Reset form
+                    $scope.newExpense = {
+                        description: '',
+                        amount: ''
+                    };
+                }
+            };
+            
+            // Delete functions
+            $scope.deleteIncome = function(index) {
+                $scope.incomes.splice(index, 1);
+            };
+            
+            $scope.deleteExpense = function(index) {
+                $scope.expenses.splice(index, 1);
+            };
+            
+            // Calculate totals
+            $scope.totalIncome = function() {
+                return $scope.incomes.reduce(function(total, income) {
+                    return total + income.amount;
+                }, 0);
+            };
+            
+            $scope.totalExpenses = function() {
+                return $scope.expenses.reduce(function(total, expense) {
+                    return total + expense.amount;
+                }, 0);
+            };
+            
+            // Calculate balance
+            $scope.getBalance = function() {
+                return $scope.totalIncome() - $scope.totalExpenses();
+            };
+        });
+    </script>
+</body>
+</html>
