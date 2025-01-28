@@ -1,6 +1,4 @@
 var app = angular.module('movieRentalApp', []);
-
-
 app.service('RentalService', function () {
     this.calculatePrice = function (year) {
         const currentYear = new Date().getFullYear();
@@ -10,7 +8,6 @@ app.service('RentalService', function () {
         return 3; 
     };
 });
-
 
 app.controller('MovieController', ['$scope', 'RentalService', function ($scope, RentalService) {
     
@@ -24,46 +21,27 @@ app.controller('MovieController', ['$scope', 'RentalService', function ($scope, 
         { title: 'The Lion King', genre: 'Animation', year: 1994 },
         { title: 'Frozen', genre: 'Animation', year: 2013 }
     ];
-
-   
     $scope.genres = [...new Set($scope.movies.map(movie => movie.genre))];
-
-   
     $scope.yearOptions = ['Latest', 'Oldest'];
-
     $scope.selectedGenre = '';
     $scope.selectedYear = '';
-
-   
     $scope.filterMovies = function () {
         let filteredMovies = $scope.movies;
-
-
         if ($scope.selectedGenre) {
             filteredMovies = filteredMovies.filter(movie => movie.genre === $scope.selectedGenre);
         }
-
-        
         if ($scope.selectedYear === 'Latest') {
-           
             filteredMovies = filteredMovies.sort((a, b) => b.year - a.year);
         } else if ($scope.selectedYear === 'Oldest') {
-          
             filteredMovies = filteredMovies.sort((a, b) => a.year - b.year);
         }
-
         return filteredMovies;
     };
-
-   
     $scope.getRentalPrice = function (movie) {
         return RentalService.calculatePrice(movie.year);
     };
-
-    
     $scope.newMovie = {};
     $scope.errorMessage = '';
-
     $scope.addMovie = function () {
         
         if ($scope.movies.some(m => m.title === $scope.newMovie.title)) {
